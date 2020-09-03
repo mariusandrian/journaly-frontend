@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import { Redirect, Link } from "react-router-dom";
 import EditIcon from '@material-ui/icons/Edit';
-import DeleteIcon from '@material-ui/icons/Delete';
 import IconButton from '@material-ui/core/IconButton';
+import ChatIcon from '@material-ui/icons/Chat';
 
 import axios from 'axios';
 const BACKEND_URL = 'http://localhost:4000';
@@ -43,9 +43,9 @@ export class OtherEntries extends Component {
             console.log(err);
         }
     }
-    handleEdit(e) {
+    handleComment(e) {
         const key = e.currentTarget.value;
-        window.location.href = `/entries/edit/${key}`;
+        window.location.href = `/entries/comment/${key}`;
     }
     componentDidMount () {
         this.getOtherEntries();
@@ -61,14 +61,9 @@ export class OtherEntries extends Component {
                                         <div key={item._id} className="likes-item">
                                             <div className="likes-name">
                                                 <h3>{item.date}</h3>
-                                                <p>Feeling {item.mood}</p>
-                                            </div>
-                                            <div>
-                                                <IconButton aria-label="edit" onClick={this.handleEdit} value={item._id}>
-                                                    <EditIcon fontSize="small" />
-                                                </IconButton>
-                                                <IconButton aria-label="delete" onClick={this.handleDelete} value={item._id}>
-                                                    <DeleteIcon fontSize="small" />
+                                                <p>{item.content}</p>
+                                                <IconButton aria-label="comment" onClick={this.handleComment} value={item._id}>
+                                                    <ChatIcon fontSize="small" />
                                                 </IconButton>
                                             </div>
                                         </div>

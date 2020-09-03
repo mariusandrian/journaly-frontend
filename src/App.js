@@ -7,12 +7,15 @@ import { withRouter } from 'react-router-dom'
 import sessionService from './services/sessionService';
 import usersService from './services/usersService';
 
-import openSocket from 'socket.io-client';
-
 import { ParallaxProvider } from 'react-scroll-parallax';
 import NewEntry from './components/NewEntry';
 import Entries from './components/Entries';
 import EditEntry from './components/EditEntry';
+import Comment from './components/Comment';
+
+
+import axios from 'axios';
+const BACKEND_URL = 'http://localhost:4000';
 
 // const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:4000'
 // const buildUrl = apiPath => {
@@ -31,11 +34,12 @@ class App extends Component {
         email: "test@email.com",
         password: "$2b$10$DvMC821Zp8J7guS0SaVolOJd6MEcBxJMNaYImQNAj7vvg9E1i0OZW",
         avatar: "https://www.kayawell.com/Data/UserContentImg/2018/3/b1b977c9-671f-47af-8956-d4037e5a82fd.jpg",
-        // hasWrittenToday: false
+        hasWrittenToday: true
       },
       isLogIn: true,
       err: '',
-      currentEntry: ""
+      currentEntry: "",
+      dailyQuestion: {}
     }
   }
 
@@ -259,13 +263,30 @@ class App extends Component {
     
     const chatRoom = await usersService.createChatRoom(payload);
   }
-
+*/
+getDailyQuestion = async () => {
+  // console.log(this.props.currentUser._id);
+  const response = await axios({
+      method: 'get',
+      url: `${BACKEND_URL}/cty/question`,
+  })
+  .catch(function (error) {
+      console.log(error);
+  });
+  console.log(response);
+  if(response.status) {
+      this.setState({
+          dailyQuestion: response.data.data
+      })
+  }
+}
   // When page is loaded
   componentDidMount() {
-    this.getAllCountries();
-    this.checkAuthentication();
-    this.getLocation();
-
+    this.getDailyQuestion();
+    // this.checkAuthentication();
+    // this.getLocation();
+  }
+/*
     // Retrieve data from socket.io server
     socket.on('matched', (data) => this.setState({matchModalContent: data, showMatchModal: true, backgroundBlur: true}));
   }
@@ -294,6 +315,7 @@ class App extends Component {
                   <Home 
                     {...props}
                     currentUser={this.state.currentUser}
+                    dailyQuestion={this.state.dailyQuestion}
                   />}
                 />
                 <Route path="/new" render={(props)=>
@@ -312,6 +334,12 @@ class App extends Component {
                   <Entries
                     {...props}
                     currentUser={this.state.currentUser}
+                  />} 
+                />
+                <Route path="/entries/comment/:id" render={(props) => 
+                <Comment
+                  {...props}
+                  currentUser={this.state.currentUser}
                   />} 
                 />
                 {/* <Route path="/about" component={About} />
