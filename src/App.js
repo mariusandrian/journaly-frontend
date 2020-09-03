@@ -12,6 +12,7 @@ import NewEntry from './components/NewEntry';
 import Entries from './components/Entries';
 import EditEntry from './components/EditEntry';
 import Comment from './components/Comment';
+import Community from './components/Community';
 
 
 import axios from 'axios';
@@ -340,6 +341,13 @@ getDailyQuestion = async () => {
                 <Comment
                   {...props}
                   currentUser={this.state.currentUser}
+                  />} 
+                />
+                <Route exact path="/community" render={(props) => 
+                <Community
+                  {...props}
+                  currentUser={this.state.currentUser}
+                  dailyQuestion={this.state.dailyQuestion}
                   />} 
                 />
                 {/* <Route path="/about" component={About} />

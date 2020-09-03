@@ -51,7 +51,6 @@ export class NewEntry extends Component {
                     moodIndicator = 1;
                     break;
             }
-            console.log(moodIndicator);
             if(this.state.content) {
                 // send POST to server
                 // console.log(this.props);

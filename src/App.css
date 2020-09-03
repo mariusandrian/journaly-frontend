@@ -15,10 +15,8 @@ h1 {
 
 /* Header-Body Sections */
 .header-body {
-  background-image: url('https://www.justinemfulama.com/wp-content/uploads/2019/10/expectations-in-a-relationship.png');
-  background-repeat: no-repeat; /* Do not repeat the image */
-  background-size: cover; /* */
-  background-position: center;
+  background: #74ebd5;  /* fallback for old browsers */
+  background-image: linear-gradient(to top, #fff1eb 0%, #ace0f9 100%);
   color: black;
   min-height: 700px;
   padding-bottom: 5%;
@@ -606,4 +604,12 @@ main footer a{
   height: 50px;
   border-radius: 50%;
   margin-right: 20px;
+}
+
+.replies-container {
+  margin: 20px;
+}
+
+.reply-item-username {
+  font-weight: bold;
 }
