@@ -1,31 +1,31 @@
 import React, { Component } from 'react'
 import { Redirect, Link } from "react-router-dom";
 import EditIcon from '@material-ui/icons/Edit';
+import DeleteIcon from '@material-ui/icons/Delete';
 import IconButton from '@material-ui/core/IconButton';
-import ChatIcon from '@material-ui/icons/Chat';
 
 import axios from 'axios';
 const BACKEND_URL = 'http://localhost:4000';
 
-export class OtherEntries extends Component {
+export class Inbox extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            entries: []
+            mail: []
         }
     }
-    getOtherEntries = async () => {
+    getMail = async () => {
         // console.log(this.props.currentUser._id);
         const response = await axios({
             method: 'get',
-            url: `${BACKEND_URL}/top/${this.props.currentUser.user_id}`,
+            url: `${BACKEND_URL}/mail/${this.props.currentUser.user_id}`,
         })
         .catch(function (error) {
             console.log(error);
         });
         if(response.status) {
             this.setState({
-                entries: response.data.data
+                mail: response.data.data
             })
         }
     }
@@ -43,27 +43,30 @@ export class OtherEntries extends Component {
             console.log(err);
         }
     }
-    handleComment(e) {
+    handleEdit(e) {
         const key = e.currentTarget.value;
-        window.location.href = `/entries/comment/${key}`;
+        window.location.href = `/entries/edit/${key}`;
     }
     componentDidMount () {
-        this.getOtherEntries();
+        this.getMail();
         // console.log('islogin' + this.props.isLogin);
     }
     render() {
         return (
             <React.Fragment>
                 <div className="likes-container">
-                    {this.state.entries === 0 ? '' : 
-                        this.state.entries.map((item, index) => {
+                    {this.state.mail === 0 ? '' : 
+                        this.state.mail.map((item, index) => {
                                     return(
                                         <div key={item._id} className="likes-item">
                                             <div className="likes-name">
-                                                <h3>{item.username} wrote on {item.date}</h3>
+                                                <h3>{item.username} replied to you</h3>
+                                                <p>{item.date}</p>
                                                 <p>{item.content}</p>
-                                                <IconButton aria-label="comment" onClick={this.handleComment} value={item._id}>
-                                                    <ChatIcon fontSize="small" />
+                                            </div>
+                                            <div>
+                                                <IconButton aria-label="delete" onClick={this.handleDelete} value={item._id}>
+                                                    <DeleteIcon fontSize="small" />
                                                 </IconButton>
                                             </div>
                                         </div>
@@ -77,4 +80,4 @@ export class OtherEntries extends Component {
     }
 }
 
-export default OtherEntries
+export default Inbox

@@ -4,8 +4,9 @@ import SaveIcon from '@material-ui/icons/Save';
 import Button from '@material-ui/core/Button';
 import TextareaAutosize from '@material-ui/core/TextareaAutosize';
 import Icon from '@material-ui/core/Icon';
-
 import axios from 'axios';
+const moment = require('moment');
+
 const BACKEND_URL = 'http://localhost:4000';
 
 export class Comment extends Component {
@@ -30,6 +31,7 @@ export class Comment extends Component {
         if(response.status) {
             this.setState({
                 content: response.data.data.content,
+                user_id: response.data.data.user_id,
                 date: response.data.data.date,
                 mood: response.data.data.mood,
                 moodIndicator:  response.data.data.moodIndicator,
@@ -41,11 +43,12 @@ export class Comment extends Component {
         try {
             const response = await axios({
                 method: 'put',
-                url: `${BACKEND_URL}/entries/reply/${this.state._id}`,
+                url: `${BACKEND_URL}/mail/${this.state.user_id}`,
                 data: {
                     user_id: this.props.currentUser.user_id,
                     username: this.props.currentUser.username,
                     content: this.state.comment,
+                    date: moment().format('LL'),
                 }
             });
             console.log(response);
@@ -73,7 +76,7 @@ export class Comment extends Component {
                 <div className="likes-container">
                     <div className="likes-item">
                         <div className="likes-name">
-                            <h3>{this.state.date}</h3>
+                            <h3>{this.state.username} wrote on {this.state.date}</h3>
                             <p>{this.state.content}</p>
                         </div>
                         <div>

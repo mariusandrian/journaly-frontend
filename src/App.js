@@ -13,6 +13,7 @@ import Entries from './components/Entries';
 import EditEntry from './components/EditEntry';
 import Comment from './components/Comment';
 import Community from './components/Community';
+import Inbox from './components/Inbox';
 
 
 import axios from 'axios';
@@ -146,77 +147,11 @@ class App extends Component {
     })
   }
 
-  // Get Location
-  getLocation = () => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(this.showPosition)
-    } else {
-      console.log('Geolocation is not supported by this browser');
-    }
-  }
-
-  // Get User's Position
-  showPosition = async (position) => {
-    this.setState({
-      position: {
-        lat: position.coords.latitude,
-        long: position.coords.longitude
-      }
-    });
     // Update Log In situation of user in database
     await usersService.updateCompletionStatus(this.state.currentUser._id, {
       isLogIn: true,
       position: this.state.position
     })
-  }
-
-
-  // find near by users
-  findNearByUser = async () => {
-    const users = await usersService.getAll();
-    const logInUsers = users.filter(user => user.isLogIn === true && user.gender === this.state.currentUser.lookingForGender);
-
-    const lat1 = this.state.position.lat;
-    const long1 = this.state.position.long;
-
-    const nearByUsers = [];
-    for (let i = 0; i < logInUsers.length; i++) {
-      const lat2 = logInUsers[i].position.lat;
-      const long2 = logInUsers[i].position.long
-      const dist = Math.round(this.distance(lat1, long1, lat2, long2, 'K'));
-      if (dist <= 100) nearByUsers.push({
-        user: logInUsers[i],
-        dist: dist
-      });
-    }
-    this.setState({
-      nearByUsers: nearByUsers
-    })
-    console.log(logInUsers);
-  }
-  // go to next user
-  delete = async (id, filter) => {
-    if (filter === "near") {
-      const users = this.state.nearByUsers
-      const index = users.findIndex(item => item.user._id === id)
-      this.setState({
-        nearByUsers: [
-          ...users.slice(0, index),
-          ...users.slice(index + 1)
-        ]
-      })
-    } else {
-      const users = this.state.users;
-      const index = users.findIndex(item => item._id === id);
-      this.setState({
-        users: [
-          ...users.slice(0, index),
-          ...users.slice(index + 1)
-        ]
-
-      })
-    }
-
   }
 
   // like a user
@@ -348,6 +283,12 @@ getDailyQuestion = async () => {
                   {...props}
                   currentUser={this.state.currentUser}
                   dailyQuestion={this.state.dailyQuestion}
+                  />} 
+                />
+                <Route exact path="/inbox" render={(props) =>
+                <Inbox
+                  {...props}
+                  currentUser={this.state.currentUser}
                   />} 
                 />
                 {/* <Route path="/about" component={About} />

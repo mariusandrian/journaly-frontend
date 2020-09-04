@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import Alert from '@material-ui/lab/Alert';
+import Button from '@material-ui/core/Button';
 import {withRouter} from 'react-router-dom';
+import TextareaAutosize from '@material-ui/core/TextareaAutosize';
 const moment = require('moment');
 const axios = require('axios');
 const BACKEND_URL = 'http://localhost:4000';
@@ -59,6 +61,7 @@ export class NewEntry extends Component {
                     url: `${BACKEND_URL}/entries`,
                     data: {
                         user_id: this.props.currentUser.user_id,
+                        username: this.props.currentUser.username,
                         date: moment().format('LL'),
                         content: this.state.content,
                         mood: this.state.mood,
@@ -154,9 +157,13 @@ export class NewEntry extends Component {
                 :
                 <React.Fragment>
                     <h2>What is it today that makes you feel {this.state.mood}?</h2>
-                    <textarea 
+                    <TextareaAutosize 
                         name="content"
                         onChange={this.handleChange}
+                        rowsMin={3} 
+                        className="input-textarea" 
+                        placeholder="Write here..."
+                        maxLength="200"
                     />
                     <br />
                     { this.state.error ? 
