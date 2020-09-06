@@ -57,9 +57,11 @@ class Home extends Component {
     render() {
         return (
             <React.Fragment>
-                {}
-                <Login/>
-                {this.props.currentUser.hasWrittenToday === false ? 
+                {this.props.isLogIn === false ?
+                <Login
+                    login={this.props.login}
+                /> :
+                this.props.currentUser.hasWrittenToday === false ? 
                 <React.Fragment>
                 <div className="homepage-title">
                     <h2>Daily Journal</h2>
@@ -142,9 +144,8 @@ class Home extends Component {
                         : ""}
                         
                     </div>
-                    <button>Able to submit Entry</button>
                 </React.Fragment>
-                }
+                } 
             </React.Fragment>
 
         )

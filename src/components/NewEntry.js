@@ -12,13 +12,13 @@ export class NewEntry extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            mood: "",
+            // mood: "",
             stage: 0,
-            content: ""
+            // content: ""
         }
     }
     nextStage = () => {
-        if(this.state.mood) {
+        if(this.props.newEntryMood) {
             this.setState({
                 error: "",
                 stage: 1
@@ -32,66 +32,69 @@ export class NewEntry extends Component {
     redirectToHome=(props)=> {
         this.props.history.push('/');
     }
-    submitEntry = async(e) => {
-        try {
-            let response = '';
-            let moodIndicator = 0;
-            switch(this.state.mood) {
-                case "elated":
-                    moodIndicator = 5;
-                    break;
-                case "happy":
-                    moodIndicator = 4;
-                    break;
-                case "ok":
-                    moodIndicator = 3;
-                    break;
-                case "bad":
-                    moodIndicator = 2;
-                    break;
-                case "awful":
-                    moodIndicator = 1;
-                    break;
-            }
-            if(this.state.content) {
-                // send POST to server
-                // console.log(this.props);
-                response = await axios({
-                    method: 'post',
-                    url: `${BACKEND_URL}/entries`,
-                    data: {
-                        user_id: this.props.currentUser.user_id,
-                        username: this.props.currentUser.username,
-                        date: moment().format('LL'),
-                        content: this.state.content,
-                        mood: this.state.mood,
-                        moodIndicator: moodIndicator
-                    } 
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
-                if(response.status) {
-                    this.props.history.push('/');
-                }
-            } else {
-                this.setState({
-                    error: "Please enter a value above"
-                });
+    // submitNewEntry = async(e) => {
+    //     try {
+    //         let response = '';
+    //         let moodIndicator = 0;
+    //         switch(this.state.mood) {
+    //             case "elated":
+    //                 moodIndicator = 5;
+    //                 break;
+    //             case "happy":
+    //                 moodIndicator = 4;
+    //                 break;
+    //             case "ok":
+    //                 moodIndicator = 3;
+    //                 break;
+    //             case "bad":
+    //                 moodIndicator = 2;
+    //                 break;
+    //             case "awful":
+    //                 moodIndicator = 1;
+    //                 break;
+    //         }
+    //         if(this.state.content) {
+    //             // send POST to server
+    //             // console.log(this.props);
+    //             response = await axios({
+    //                 method: 'post',
+    //                 url: `${BACKEND_URL}/entries`,
+    //                 data: {
+    //                     user_id: this.props.currentUser.user_id,
+    //                     username: this.props.currentUser.username,
+    //                     date: moment().format('LL'),
+    //                     content: this.state.content,
+    //                     mood: this.state.mood,
+    //                     moodIndicator: moodIndicator
+    //                 } 
+    //             })
+    //             .catch(function (error) {
+    //                 console.log(error);
+    //             });
+    //             if(response.status) {
+    //                 this.props.history.push('/');
+    //             }
+    //         } else {
+    //             this.setState({
+    //                 error: "Please enter a value above"
+    //             });
 
-            }
-            // this.props.history.push('/');
-        } catch(err) {
-            console.log(err);
-        }
-    }
-    handleChange = e => {
-        const { name, value } = e.target;
+    //         }
+    //     } catch(err) {
+    //         console.log(err);
+    //     }
+    // }
+    // handleChange = e => {
+    //     const { name, value } = e.target;
     
-        this.setState({
-          [name]: value
-        });
-      };
+    //     this.setState({
+    //       [name]: value
+    //     });
+    //   };
+    handleSubmit = () => {
+        this.props.submitNewEntry();
+        this.props.history.push('/');
+    }
     componentDidMount() {
         this.setState({
             stage: 0
@@ -110,41 +113,41 @@ export class NewEntry extends Component {
                             <input 
                                 type="radio" 
                                 value="elated" 
-                                name="mood" 
+                                name="newEntryMood" 
                                 id="elated" 
-                                onChange={this.handleChange}
+                                onChange={this.props.handleNewEntryChange}
                             />
                             <label htmlFor="happy">Happy</label>
                             <input 
                                 type="radio" 
                                 value="happy" 
-                                name="mood" 
+                                name="newEntryMood" 
                                 id="happy"
-                                onChange={this.handleChange}
+                                onChange={this.props.handleNewEntryChange}
                             />
                             <label htmlFor="okay">Okay</label>
                             <input 
                                 type="radio" 
                                 value="okay" 
-                                name="mood" 
+                                name="newEntryMood" 
                                 id="okay"
-                                onChange={this.handleChange}
+                                onChange={this.props.handleNewEntryChange}
                             />
                             <label htmlFor="bad">Bad</label>
                             <input 
                                 type="radio" 
                                 value="bad" 
-                                name="mood" 
+                                name="newEntryMood" 
                                 id="bad"
-                                onChange={this.handleChange}
+                                onChange={this.props.handleNewEntryChange}
                             />
                             <label htmlFor="awful">Awful</label>
                             <input 
                                 type="radio" 
                                 value="awful" 
-                                name="mood" 
+                                name="newEntryMood" 
                                 id="awful"
-                                onChange={this.handleChange}
+                                onChange={this.props.handleNewEntryChange}
                             />
                         </fieldset>
                         </form>
@@ -156,20 +159,20 @@ export class NewEntry extends Component {
                 </React.Fragment>
                 :
                 <React.Fragment>
-                    <h2>What is it today that makes you feel {this.state.mood}?</h2>
+                    <h2>What is it today that makes you feel {this.props.newEntryMood}?</h2>
                     <TextareaAutosize 
-                        name="content"
-                        onChange={this.handleChange}
+                        name="newEntryContent"
+                        onChange={this.props.handleNewEntryChange}
                         rowsMin={3} 
                         className="input-textarea" 
                         placeholder="Write here..."
                         maxLength="200"
                     />
                     <br />
-                    { this.state.error ? 
-                        <Alert severity="warning">{this.state.error}</Alert>
+                    { this.props.newEntryError ? 
+                        <Alert severity="warning">{this.props.newEntryError}</Alert>
                     : ""}
-                    <button onClick={this.submitEntry}>Submit</button>
+                    <button onClick={this.handleSubmit}>Submit</button>
                 </React.Fragment>
             }
             </div>

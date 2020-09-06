@@ -4,6 +4,7 @@ import Home from './components/Home';
 import './App.css';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { withRouter } from 'react-router-dom'
+import { Redirect } from 'react-router-dom'
 import sessionService from './services/sessionService';
 import usersService from './services/usersService';
 
@@ -17,7 +18,7 @@ import Inbox from './components/Inbox';
 import Login from './components/Login';
 import SignUp from './components/SignUp';
 
-
+import moment from 'moment';
 import axios from 'axios';
 import ProtectedRoute from './components/ProtectedRoute';
 
@@ -33,17 +34,22 @@ class App extends Component {
     super(props);
     this.state = {
       currentUser: {
-        username: "test",
+        username: "initialtest",
         user_id: "5f4a24df74480ab8123919a3",
-        email: "test@email.com",
-        password: "$2b$10$DvMC821Zp8J7guS0SaVolOJd6MEcBxJMNaYImQNAj7vvg9E1i0OZW",
         avatar: "https://www.kayawell.com/Data/UserContentImg/2018/3/b1b977c9-671f-47af-8956-d4037e5a82fd.jpg",
-        hasWrittenToday: true
+        hasWrittenToday: false
       },
-      isLogIn: true,
+      loginUsername: "",
+      loginPassword: "",
+      isLogin: "",
+      error: "",
+      isLogIn: false,
       err: '',
       currentEntry: "",
-      dailyQuestion: {}
+      dailyQuestion: {},
+      newEntryContent: "",
+      newEntryMood: "",
+      newEntryError: ""
     }
   }
 
@@ -52,14 +58,71 @@ class App extends Component {
   checkAuthentication = async () => {
     const result = await sessionService.checkAuthentication();
     console.log('result is of auth check is ', result);
-    if (result.isLogIn) {
+    if (result.isLogin) {
+      console.log('into if statement')
       const currentUser = localStorage.getItem('currentUser');
+      console.log(currentUser)
+      const parsedUser = JSON.parse(currentUser);
+      console.log(parsedUser)
+      const stateUser = {
+        username: parsedUser.username,
+        user_id: parsedUser._id
+      }
+      console.log(stateUser);
       this.setState({
         isLogIn: true,
-        currentUser: JSON.parse(currentUser)
+        currentUser: {
+          ...this.state.currentUser,
+          user_id: parsedUser._id,
+          username: parsedUser.username
+        }
       })
     }
   }
+  login = () => {
+    console.log('sending login request');
+    axios({
+        method: "POST",
+        data: {
+            username: this.state.loginUsername,
+            password: this.state.loginPassword
+        },
+        withCredentials: true,
+        url: "http://localhost:4000/login"
+    })
+    
+    .then( res => {
+        console.log(res)
+            const currentUser = {
+                _id: res.data.data._id,
+                username: res.data.data.username
+            }
+            const id = res.data.data._id;
+            const username= res.data.data.username;
+            console.log('currentUser is', currentUser);
+            // set local storage
+            localStorage.setItem('isLogIn', true);
+          
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            this.setState({
+              isLogIn: true,
+              currentUser: {
+                ...this.state.currentUser,
+                user_id: id,
+                username: username
+              }
+            })
+    }
+    ).catch( error => {
+        console.log(error.response.data.error);
+        this.setState({
+          error: error.response.data.error
+        })
+    });
+};
+handleChange = (event) => {
+  this.setState({ [event.target.id]: event.target.value })
+}
 /*
   // Login
   login = async (currentUser) => {
@@ -69,12 +132,8 @@ class App extends Component {
     })
     this.fetchUsers();
     this.getLocation();
-
-    // Crete new socket room
-    console.log('creating new socket room');
-    socket.emit('join', {id: currentUser._id});
   }
-
+*/
   // Logout
   logout = async () => {
     await sessionService.logOut();
@@ -82,10 +141,6 @@ class App extends Component {
     // update Log In situation of user in database
     await usersService.updateCompletionStatus(this.state.currentUser._id, {
       isLogIn: false,
-      position: {
-        lat: null,
-        long: null
-      }
     });
 
     // Reset Local Storage
@@ -99,6 +154,7 @@ class App extends Component {
   // Reset Updated Current User
   resetUpdatedCurrentUser = () => {
     const currentUser = localStorage.getItem('currentUser');
+    // const parsedUser = JSON.parse(currentUser)
     this.setState({
       currentUser: JSON.parse(currentUser)
     })
@@ -119,14 +175,6 @@ class App extends Component {
     })
   }
 
-    // Update Log In situation of user in database
-    await usersService.updateCompletionStatus(this.state.currentUser._id, {
-      isLogIn: true,
-      position: this.state.position
-    })
-  }
-
-*/
 getDailyQuestion = async () => {
   // console.log(this.props.currentUser._id);
   const response = await axios({
@@ -143,6 +191,77 @@ getDailyQuestion = async () => {
       })
   }
 }
+
+submitNewEntry = async(e) => {
+  try {
+      let response = '';
+      let moodIndicator = 0;
+      switch(this.state.newEntryMood) {
+          case "elated":
+              moodIndicator = 5;
+              break;
+          case "happy":
+              moodIndicator = 4;
+              break;
+          case "ok":
+              moodIndicator = 3;
+              break;
+          case "bad":
+              moodIndicator = 2;
+              break;
+          case "awful":
+              moodIndicator = 1;
+              break;
+      }
+      if(this.state.newEntryContent) {
+          // send POST to server
+          console.log(this.props);
+          response = await axios({
+              method: 'post',
+              url: `${BACKEND_URL}/entries`,
+              data: {
+                  user_id: this.state.currentUser.user_id,
+                  username: this.state.currentUser.username,
+                  date: moment().format('LL'),
+                  content: this.state.newEntryContent,
+                  mood: this.state.newEntryMood,
+                  moodIndicator: moodIndicator
+              } 
+          })
+          .catch(function (error) {
+              console.log(error);
+          });
+          if(response.status) {
+            this.setState({
+              currentUser: {
+                ...this.state.currentUser,
+                hasWrittenToday: true
+              },
+              newEntryContent: "",
+              newEntryMood: "",
+              newEntryError: ""
+            })
+              // this.props.history.push('/');
+
+          }
+      } else {
+          this.setState({
+              newEntryError: "Please enter a value above"
+          });
+
+      }
+  } catch(err) {
+      console.log(err);
+  }
+}
+handleNewEntryChange = e => {
+  console.log(e.target);
+  const { name, value } = e.target;
+
+  this.setState({
+    [name]: value
+  });
+};
   // When page is loaded
   componentDidMount() {
     this.getDailyQuestion();
@@ -175,16 +294,26 @@ getDailyQuestion = async () => {
               />
               <Switch>
                 <Route exact path="/" render={(props) => 
+                  localStorage.getItem('isLogIn') ?
                   <Home 
                     {...props}
+                    isLogIn={this.state.isLogIn}
                     currentUser={this.state.currentUser}
                     dailyQuestion={this.state.dailyQuestion}
-                  />}
+                    login={this.login} 
+                  />:
+                  <Redirect to="/login"/>                
+                }
                 />
                 <Route path="/new" render={(props)=>
                   <NewEntry
                     {...props}
                     currentUser={this.state.currentUser}
+                    newEntryContent={this.state.newEntryContent}
+                    newEntryMood={this.state.newEntryMood}
+                    newEntryError={this.state.newEntryError}
+                    submitNewEntry={this.submitNewEntry}
+                    handleNewEntryChange={this.handleNewEntryChange}
                   />} 
                 />
                   <Route path="/entries/edit/:id" render={(props)=>
@@ -194,10 +323,12 @@ getDailyQuestion = async () => {
                     />} 
                   />
                 <Route exact path="/entries" render={(props)=>
+                  localStorage.getItem('isLogIn') ?
                   <Entries
                     {...props}
                     currentUser={this.state.currentUser}
-                  />} 
+                  /> :
+                  <Redirect to="/login"/>                } 
                 />
                 <Route path="/entries/comment/:id" render={(props) => 
                 <Comment
@@ -206,20 +337,36 @@ getDailyQuestion = async () => {
                   />} 
                 />
                 <Route exact path="/community" render={(props) => 
+                localStorage.getItem('isLogIn') ?
                 <Community
                   {...props}
                   currentUser={this.state.currentUser}
                   dailyQuestion={this.state.dailyQuestion}
-                  />} 
+                  /> :
+                  <Redirect to="/login"/>   
+                }  
                 />
                 <Route exact path="/inbox" render={(props) =>
+                  localStorage.getItem('isLogIn') ?
                 <Inbox
                   {...props}
                   currentUser={this.state.currentUser}
-                  />} 
+                  />:
+                  <Redirect to="login"/>   
+                } 
                 />
-                <Route exact path="/login" component={Login} />
-                {/* <Route exact path="/signup" component={SignUp} /> */}
+                <Route exact path="/login" render={(props) =>
+                  <Login
+                    loginUsername= {this.state.loginUsername}
+                    loginPassword= {this.state.loginPassword}
+                    isLogIn= {this.state.isLogIn}
+                    error= {this.state.error}
+                    login={this.login}
+                    handleChange={this.handleChange}
+                  />
+                }
+                />
+                <Route exact path="/signup" component={SignUp} />
                 {/* <Route path="/about" component={About} />
                 <Route path="/FAQ" component={FAQ} />
                 <Route path="/login" render={() =>

@@ -15,7 +15,6 @@ export class Inbox extends Component {
         }
     }
     getMail = async () => {
-        // console.log(this.props.currentUser._id);
         const response = await axios({
             method: 'get',
             url: `${BACKEND_URL}/mail/${this.props.currentUser.user_id}`,
@@ -55,7 +54,7 @@ export class Inbox extends Component {
         return (
             <React.Fragment>
                 <div className="likes-container">
-                    {this.state.mail === 0 ? '' : 
+                    {this.state.mail === undefined ? '' : 
                         this.state.mail.map((item, index) => {
                                     return(
                                         <div key={item._id} className="likes-item">
