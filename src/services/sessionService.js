@@ -24,7 +24,7 @@ export default {
     },
     async checkAuthentication () {
         try {
-            const response = await apiUtil.get(buildUrl('/check_authentication'));
+            const response = await apiUtil.get(buildUrl('/user')); // edited to use new user route
             return response.data
         } catch (err) {
             console.log(err)

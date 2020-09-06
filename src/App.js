@@ -14,17 +14,19 @@ import EditEntry from './components/EditEntry';
 import Comment from './components/Comment';
 import Community from './components/Community';
 import Inbox from './components/Inbox';
+import Login from './components/Login';
+import SignUp from './components/SignUp';
 
 
 import axios from 'axios';
+import ProtectedRoute from './components/ProtectedRoute';
+
 const BACKEND_URL = 'http://localhost:4000';
 
 // const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:4000'
 // const buildUrl = apiPath => {
 //     return BACKEND_URL + apiPath;
 // };
-
-// const socket = openSocket(BACKEND_URL); 
 
 class App extends Component {
   constructor(props) {
@@ -45,50 +47,20 @@ class App extends Component {
     }
   }
 
-  /*// Get All Countries
-  getAllCountries = () => {
-    const allCountries = [];
-    for (let key in countries.countries) {
-      allCountries.push(countries.countries[key]);
-    }
-    this.setState({
-      countries: allCountries
-    })
-  }
-
-  // Get filtered Users
-  fetchUsers = async () => {
-    const users = await usersService.getAll();
-    const filterdUsers = users.filter(user => user.gender === this.state.currentUser.lookingForGender
-      && user.age >= this.state.currentUser.lookingForAgeFrom
-      && user.age <= this.state.currentUser.lookingForAgeTo);
-    filterdUsers.sort(user => .5 - Math.random())
-    this.setState({
-      users: filterdUsers,
-      foundUsers: filterdUsers.length
-    });
-
-    return filterdUsers;
-  }
 
   // Check User Authentication
   checkAuthentication = async () => {
     const result = await sessionService.checkAuthentication();
-
+    console.log('result is of auth check is ', result);
     if (result.isLogIn) {
       const currentUser = localStorage.getItem('currentUser');
       this.setState({
         isLogIn: true,
         currentUser: JSON.parse(currentUser)
       })
-      this.fetchUsers();
-
-      // Crete new socket room after check authentication
-      console.log('creating new socket room from authentication');
-      socket.emit('join', {id: this.state.currentUser._id});
     }
   }
-
+/*
   // Login
   login = async (currentUser) => {
     this.setState({
@@ -154,51 +126,6 @@ class App extends Component {
     })
   }
 
-  // like a user
-  likeUser = async (event) => {
-    const likedUserId = event.currentTarget.getAttribute('a-key');
-    const currentUserId = JSON.parse(localStorage.getItem('currentUser'))
-    console.log(`${currentUserId._id} likes ${likedUserId} `);
-
-    await usersService.likeUser(currentUserId._id, likedUserId);
-    await socket.emit('checkMatch', { currentUserId: currentUserId._id, likedUserId: likedUserId});
-
-    // Remove liked user from UI
-    const users = this.state.users;
-      const index = users.findIndex(item => item._id === likedUserId);
-      this.setState({
-        users: [
-          ...users.slice(0, index),
-          ...users.slice(index + 1)
-        ]
-      });
-  }
-
-  // show or close modal
-   showModal = (event) => {
-    this.setState({showMatchModal: !this.state.showMatchModal});
-  }
-
-  createNewChatRoomFromModal = async (event) => {
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    const otherUser = this.state.matchModalContent.otherUserId;
-    const isChatExist = await usersService.isChatExist(this.state.currentUser._id, otherUser);
-    console.log(isChatExist);
-    if (isChatExist === true) {
-      console.log('chat exists! we dont create new room');
-      return;
-    }
-    const payload = 
-    {
-      users: [currentUser._id, otherUser],
-      messages: [
-      ]
-    }
-    console.log('this is new chat payload to backend')
-    console.log(payload);
-    
-    const chatRoom = await usersService.createChatRoom(payload);
-  }
 */
 getDailyQuestion = async () => {
   // console.log(this.props.currentUser._id);
@@ -219,8 +146,8 @@ getDailyQuestion = async () => {
   // When page is loaded
   componentDidMount() {
     this.getDailyQuestion();
-    // this.checkAuthentication();
-    // this.getLocation();
+    this.checkAuthentication();
+
   }
 /*
     // Retrieve data from socket.io server
@@ -291,6 +218,8 @@ getDailyQuestion = async () => {
                   currentUser={this.state.currentUser}
                   />} 
                 />
+                <Route exact path="/login" component={Login} />
+                {/* <Route exact path="/signup" component={SignUp} /> */}
                 {/* <Route path="/about" component={About} />
                 <Route path="/FAQ" component={FAQ} />
                 <Route path="/login" render={() =>

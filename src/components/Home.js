@@ -4,6 +4,7 @@ import OtherEntries from '../components/OtherEntries';
 import Alert from '@material-ui/lab/Alert';
 import Button from '@material-ui/core/Button';
 import TextareaAutosize from '@material-ui/core/TextareaAutosize';
+import Login from '../components/Login';
 const moment = require('moment');
 const axios = require('axios');
 const BACKEND_URL = 'http://localhost:4000';
@@ -56,6 +57,8 @@ class Home extends Component {
     render() {
         return (
             <React.Fragment>
+                {}
+                <Login/>
                 {this.props.currentUser.hasWrittenToday === false ? 
                 <React.Fragment>
                 <div className="homepage-title">
