@@ -17,6 +17,7 @@ export default {
     async logOut() {
         try {
             const response = await apiUtil.get(buildUrl('/logout'));
+            console.log('logout response is', response);
             return response.data;
         } catch (err) {
             console.log(err);

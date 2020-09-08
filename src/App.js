@@ -22,7 +22,7 @@ import moment from 'moment';
 import axios from 'axios';
 import ProtectedRoute from './components/ProtectedRoute';
 
-const BACKEND_URL = 'http://localhost:4000';
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:4000';
 
 // const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:4000'
 // const buildUrl = apiPath => {
@@ -41,7 +41,9 @@ class App extends Component {
       },
       loginUsername: "",
       loginPassword: "",
-      isLogin: "",
+      // signupUsername: "",
+      // signupPassword: "",
+      // signupEmail: "",
       error: "",
       isLogIn: false,
       err: '',
@@ -55,31 +57,32 @@ class App extends Component {
 
 
   // Check User Authentication
-  checkAuthentication = async () => {
-    const result = await sessionService.checkAuthentication();
-    console.log('result is of auth check is ', result);
-    if (result.isLogin) {
-      console.log('into if statement')
-      const currentUser = localStorage.getItem('currentUser');
-      console.log(currentUser)
-      const parsedUser = JSON.parse(currentUser);
-      console.log(parsedUser)
-      const stateUser = {
-        username: parsedUser.username,
-        user_id: parsedUser._id
-      }
-      console.log(stateUser);
-      this.setState({
-        isLogIn: true,
-        currentUser: {
-          ...this.state.currentUser,
-          user_id: parsedUser._id,
-          username: parsedUser.username
-        }
-      })
-    }
-  }
-  login = () => {
+  // checkAuthentication = async () => {
+  //   const result = await sessionService.checkAuthentication();
+  //   console.log('result is of auth check is ', result);
+  //   if (result.isLogin) {
+  //     console.log('into if statement')
+  //     const currentUser = localStorage.getItem('currentUser');
+  //     console.log(currentUser)
+  //     const parsedUser = JSON.parse(currentUser);
+  //     console.log(parsedUser)
+  //     const stateUser = {
+  //       username: parsedUser.username,
+  //       user_id: parsedUser._id
+  //     }
+  //     console.log(stateUser);
+  //     this.setState({
+  //       isLogIn: true,
+  //       currentUser: {
+  //         ...this.state.currentUser,
+  //         user_id: parsedUser._id,
+  //         username: parsedUser.username
+  //       }
+  //     })
+  //   }
+  // }
+  login = (e) => {
+    e.preventDefault();
     console.log('sending login request');
     axios({
         method: "POST",
@@ -92,7 +95,7 @@ class App extends Component {
     })
     
     .then( res => {
-        console.log(res)
+        console.log('result of login is', res)
             const currentUser = {
                 _id: res.data.data._id,
                 username: res.data.data.username
@@ -121,6 +124,7 @@ class App extends Component {
     });
 };
 handleChange = (event) => {
+  console.log(event.target);
   this.setState({ [event.target.id]: event.target.value })
 }
 /*
@@ -135,14 +139,14 @@ handleChange = (event) => {
   }
 */
   // Logout
-  logout = async () => {
-    await sessionService.logOut();
-
-    // update Log In situation of user in database
-    await usersService.updateCompletionStatus(this.state.currentUser._id, {
-      isLogIn: false,
-    });
-
+  logout = () => {
+    console.log('trying to logout in FE')
+    // await sessionService.logOut();
+    axios({
+      method: "GET",
+      withCredentials: true,
+      url: "http://localhost:4000/logout"
+    })
     // Reset Local Storage
     localStorage.clear();
 
@@ -163,15 +167,12 @@ handleChange = (event) => {
   resetAppState = () => {
     this.setState({
       isLogIn: false,
-      currentUser: '',
-      redirect: '/',
-      err: '',
-      foundUsers: 0,
-      position: {
-        lat: null,
-        long: null
+      currentUser: {
+        username: "",
+        user_id: "",
+        avatar: "https://www.kayawell.com/Data/UserContentImg/2018/3/b1b977c9-671f-47af-8956-d4037e5a82fd.jpg",
+        hasWrittenToday: false
       },
-      users: []
     })
   }
 
@@ -265,13 +266,10 @@ handleNewEntryChange = e => {
   // When page is loaded
   componentDidMount() {
     this.getDailyQuestion();
-    this.checkAuthentication();
+    // this.checkAuthentication();
 
   }
 /*
-    // Retrieve data from socket.io server
-    socket.on('matched', (data) => this.setState({matchModalContent: data, showMatchModal: true, backgroundBlur: true}));
-  }
 
   // update Image 
   updateAvatar = (url) => {
@@ -286,23 +284,27 @@ handleNewEntryChange = e => {
       <Router>
         <div className="App">
           <div className="header-body">
-              <Header
+              {/* <Header
                 isLogIn={this.state.isLogIn}
                 avatar={this.state.currentUser.avatar}
                 username={this.state.currentUser.username}
                 logout={this.logout}
-              />
+              /> */}
               <Switch>
                 <Route exact path="/" render={(props) => 
-                  localStorage.getItem('isLogIn') ?
                   <Home 
                     {...props}
                     isLogIn={this.state.isLogIn}
                     currentUser={this.state.currentUser}
                     dailyQuestion={this.state.dailyQuestion}
                     login={this.login} 
-                  />:
-                  <Redirect to="/login"/>                
+                    logout={this.logout}
+                    loginUsername= {this.state.loginUsername}
+                    loginPassword= {this.state.loginPassword}
+                    isLogIn= {this.state.isLogIn}
+                    error= {this.state.error}
+                    handleChange={this.handleChange}
+                  />          
                 }
                 />
                 <Route path="/new" render={(props)=>
@@ -314,12 +316,14 @@ handleNewEntryChange = e => {
                     newEntryError={this.state.newEntryError}
                     submitNewEntry={this.submitNewEntry}
                     handleNewEntryChange={this.handleNewEntryChange}
+                    logout={this.logout}
                   />} 
                 />
                   <Route path="/entries/edit/:id" render={(props)=>
                     <EditEntry
                       {...props}
                       currentUser={this.state.currentUser}
+                      logout={this.logout}
                     />} 
                   />
                 <Route exact path="/entries" render={(props)=>
@@ -327,13 +331,15 @@ handleNewEntryChange = e => {
                   <Entries
                     {...props}
                     currentUser={this.state.currentUser}
+                    logout={this.logout}
                   /> :
-                  <Redirect to="/login"/>                } 
+                  <Redirect to="/"/>                } 
                 />
                 <Route path="/entries/comment/:id" render={(props) => 
                 <Comment
                   {...props}
                   currentUser={this.state.currentUser}
+                  logout={this.logout}
                   />} 
                 />
                 <Route exact path="/community" render={(props) => 
@@ -342,8 +348,9 @@ handleNewEntryChange = e => {
                   {...props}
                   currentUser={this.state.currentUser}
                   dailyQuestion={this.state.dailyQuestion}
+                  logout={this.logout}
                   /> :
-                  <Redirect to="/login"/>   
+                  <Redirect to="/"/>   
                 }  
                 />
                 <Route exact path="/inbox" render={(props) =>
@@ -351,11 +358,12 @@ handleNewEntryChange = e => {
                 <Inbox
                   {...props}
                   currentUser={this.state.currentUser}
+                  logout={this.logout}
                   />:
-                  <Redirect to="login"/>   
+                  <Redirect to="/"/>   
                 } 
                 />
-                <Route exact path="/login" render={(props) =>
+                {/* <Route exact path="/login" render={(props) =>
                   <Login
                     loginUsername= {this.state.loginUsername}
                     loginPassword= {this.state.loginPassword}
@@ -365,8 +373,13 @@ handleNewEntryChange = e => {
                     handleChange={this.handleChange}
                   />
                 }
+                /> */}
+                <Route exact path="/signup" render={(props) => 
+                  <SignUp
+                    {...props}
+                  />
+                }
                 />
-                <Route exact path="/signup" component={SignUp} />
                 {/* <Route path="/about" component={About} />
                 <Route path="/FAQ" component={FAQ} />
                 <Route path="/login" render={() =>
@@ -401,20 +414,6 @@ handleNewEntryChange = e => {
                 }
                 />
                 
-
-                <Route path='/near' render={() =>
-                  <NearByUsers
-                    isLogIn={this.state.isLogIn}
-                    users={this.state.nearByUsers}
-                    foundUsers={this.state.nearByUsers.length}
-                    delete={this.delete}
-                    findNearByUser={this.findNearByUser}
-
-                    likeUser={this.likeUser}
-
-                  />
-                }
-                />
               <Route path="/profile" render={() => 
                 <Profile 
                   currentUser={this.state.currentUser}

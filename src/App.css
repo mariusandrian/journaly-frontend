@@ -164,7 +164,12 @@ h1 {
   border-radius: 20px;
   background: rgb(0, 0, 0); /* Fallback color */
   background: rgba(0, 0, 0, 0.5); 
+  text-align: center;
   color: white;
+}
+
+.landing-logo {
+  float: left
 }
 .validate:focus {
   color: white;
@@ -333,21 +338,6 @@ button {
   filter: blur(5px);
 }
 
-/* Chatbox */
-/* body{
-  background-color:#abd9e9;
-	font-family:Arial;
-} */
-#chat-container{
-  box-sizing:border-box;
-	width:750px;
-	height:500px;
-	background:#eff3f7;
-	margin:0 auto;
-	font-size:0;
-	border-radius:5px;
-	overflow:hidden;
-}
 .sidebar{
 	width:260px;
 	height:800px;
@@ -488,53 +478,6 @@ main header h3{
 	font-size:14px;
 	font-weight:normal;
 	color:#7e818a;
-}
-
-#chat{
-	padding-left:0;
-	margin:0;
-	list-style-type:none;
-	overflow-y:scroll;
-	height:385px;
-}
-#chat li{
-	padding:5px 30px;
-}
-#chat h2,#chat h3{
-	display:inline-block;
-	font-size:13px;
-	font-weight:normal;
-}
-#chat h3{
-	color:#bbb;
-}
-#chat .message-container {
-  display: flex;
-}
-#chat .message{
-	padding: 10px;
-	color:#fff;
-	min-height:10px;
-	max-width:90%;
-	display:inline-block;
-	/* text-align:left; */
-  border-radius:5px;
-  margin-left: 5px;
-}
-.incoming-msg {
-  display: inline-block;
-}
-#chat .me{
-  text-align:right;
-}
-#chat .you .message{
-  background-color:grey;
-}
-#chat .me .message{
-	background-color:#58b666;
-}
-.no-msg {
-  margin-left: 30%;
 }
 
 main footer{

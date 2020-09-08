@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import {Redirect} from 'react-router-dom';
 import OtherEntries from '../components/OtherEntries';
 import Alert from '@material-ui/lab/Alert';
 import Button from '@material-ui/core/Button';
 import TextareaAutosize from '@material-ui/core/TextareaAutosize';
 import Login from '../components/Login';
+import Header from '../components/Header'
 const moment = require('moment');
 const axios = require('axios');
 const BACKEND_URL = 'http://localhost:4000';
@@ -58,11 +60,23 @@ class Home extends Component {
         return (
             <React.Fragment>
                 {this.props.isLogIn === false ?
-                <Login
-                    login={this.props.login}
-                /> :
+                <Login 
+                loginUsername= {this.props.loginUsername}
+                loginPassword= {this.props.loginPassword}
+                isLogIn= {this.props.isLogIn}
+                error= {this.props.error}
+                login={this.props.login}
+                handleChange={this.props.handleChange}
+                />
+                :
                 this.props.currentUser.hasWrittenToday === false ? 
                 <React.Fragment>
+                <Header 
+                    isLogIn={this.props.isLogIn}
+                    avatar={this.props.currentUser.avatar}
+                    username={this.props.currentUser.username}
+                    logout={this.props.logout}
+                />
                 <div className="homepage-title">
                     <h2>Daily Journal</h2>
                     <h5>Reflect on today's journey</h5>
