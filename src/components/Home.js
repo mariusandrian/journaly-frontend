@@ -71,12 +71,6 @@ class Home extends Component {
                 :
                 this.props.currentUser.hasWrittenToday === false ? 
                 <React.Fragment>
-                <Header 
-                    isLogIn={this.props.isLogIn}
-                    avatar={this.props.currentUser.avatar}
-                    username={this.props.currentUser.username}
-                    logout={this.props.logout}
-                />
                 <div className="homepage-title">
                     <h2>Daily Journal</h2>
                     <h5>Reflect on today's journey</h5>

@@ -34,8 +34,8 @@ class App extends Component {
     super(props);
     this.state = {
       currentUser: {
-        username: "initialtest",
-        user_id: "5f4a24df74480ab8123919a3",
+        username: "",
+        user_id: "",
         avatar: "https://www.kayawell.com/Data/UserContentImg/2018/3/b1b977c9-671f-47af-8956-d4037e5a82fd.jpg",
         hasWrittenToday: false
       },
@@ -57,30 +57,30 @@ class App extends Component {
 
 
   // Check User Authentication
-  // checkAuthentication = async () => {
-  //   const result = await sessionService.checkAuthentication();
-  //   console.log('result is of auth check is ', result);
-  //   if (result.isLogin) {
-  //     console.log('into if statement')
-  //     const currentUser = localStorage.getItem('currentUser');
-  //     console.log(currentUser)
-  //     const parsedUser = JSON.parse(currentUser);
-  //     console.log(parsedUser)
-  //     const stateUser = {
-  //       username: parsedUser.username,
-  //       user_id: parsedUser._id
-  //     }
-  //     console.log(stateUser);
-  //     this.setState({
-  //       isLogIn: true,
-  //       currentUser: {
-  //         ...this.state.currentUser,
-  //         user_id: parsedUser._id,
-  //         username: parsedUser.username
-  //       }
-  //     })
-  //   }
-  // }
+  checkAuthentication = async () => {
+    const result = await sessionService.checkAuthentication();
+    console.log('result is of auth check is ', result);
+    if (result.isLogin) {
+      console.log('into if statement')
+      const currentUser = localStorage.getItem('currentUser');
+      console.log(currentUser)
+      const parsedUser = JSON.parse(currentUser);
+      console.log(parsedUser)
+      const stateUser = {
+        username: parsedUser.username,
+        user_id: parsedUser._id
+      }
+      console.log(stateUser);
+      this.setState({
+        isLogIn: true,
+        currentUser: {
+          ...this.state.currentUser,
+          user_id: parsedUser._id,
+          username: parsedUser.username
+        }
+      })
+    }
+  }
   login = (e) => {
     e.preventDefault();
     console.log('sending login request');
@@ -113,7 +113,9 @@ class App extends Component {
                 ...this.state.currentUser,
                 user_id: id,
                 username: username
-              }
+              },
+              loginUsername: "",
+              loginPassword: ""
             })
     }
     ).catch( error => {
@@ -127,17 +129,6 @@ handleChange = (event) => {
   console.log(event.target);
   this.setState({ [event.target.id]: event.target.value })
 }
-/*
-  // Login
-  login = async (currentUser) => {
-    this.setState({
-      currentUser: currentUser,
-      isLogIn: true
-    })
-    this.fetchUsers();
-    this.getLocation();
-  }
-*/
   // Logout
   logout = () => {
     console.log('trying to logout in FE')
@@ -177,7 +168,7 @@ handleChange = (event) => {
   }
 
 getDailyQuestion = async () => {
-  // console.log(this.props.currentUser._id);
+  console.log('getting daily question from App');
   const response = await axios({
       method: 'get',
       url: `${BACKEND_URL}/cty/question`,
@@ -266,7 +257,7 @@ handleNewEntryChange = e => {
   // When page is loaded
   componentDidMount() {
     this.getDailyQuestion();
-    // this.checkAuthentication();
+    this.checkAuthentication();
 
   }
 /*
@@ -284,12 +275,14 @@ handleNewEntryChange = e => {
       <Router>
         <div className="App">
           <div className="header-body">
-              {/* <Header
-                isLogIn={this.state.isLogIn}
-                avatar={this.state.currentUser.avatar}
-                username={this.state.currentUser.username}
-                logout={this.logout}
-              /> */}
+            {this.state.isLogIn ? 
+              <Header
+              isLogIn={this.state.isLogIn}
+              avatar={this.state.currentUser.avatar}
+              username={this.state.currentUser.username}
+              logout={this.logout}
+              />
+            : ""}
               <Switch>
                 <Route exact path="/" render={(props) => 
                   <Home 
@@ -349,6 +342,7 @@ handleNewEntryChange = e => {
                   currentUser={this.state.currentUser}
                   dailyQuestion={this.state.dailyQuestion}
                   logout={this.logout}
+                  getDailyQuestion={this.getDailyQuestion}
                   /> :
                   <Redirect to="/"/>   
                 }  
@@ -363,39 +357,13 @@ handleNewEntryChange = e => {
                   <Redirect to="/"/>   
                 } 
                 />
-                {/* <Route exact path="/login" render={(props) =>
-                  <Login
-                    loginUsername= {this.state.loginUsername}
-                    loginPassword= {this.state.loginPassword}
-                    isLogIn= {this.state.isLogIn}
-                    error= {this.state.error}
-                    login={this.login}
-                    handleChange={this.handleChange}
-                  />
-                }
-                /> */}
                 <Route exact path="/signup" render={(props) => 
                   <SignUp
                     {...props}
                   />
                 }
                 />
-                {/* <Route path="/about" component={About} />
-                <Route path="/FAQ" component={FAQ} />
-                <Route path="/login" render={() =>
-                  <Login
-                    err={this.state.err}
-                    currentUser={this.state.currentUser}
-                    isLogIn={this.state.isLogIn}
-                    login={this.login}
-                    fetchUsers={this.fetchUsers}
-                  />} />
-                <Route path="/signup" render={() =>
-                  <SignUp
-                    countries={this.state.countries}
-                  />
-                }
-                />
+                {/*
                 <Route path='/users' exact render={() =>
                   <Main id={this.state.backgroundBlur ? 'blur' : ''}
                     isLogIn={this.state.isLogIn}
@@ -424,29 +392,8 @@ handleNewEntryChange = e => {
                   updateAvatar={this.updateAvatar}
                 />
               } 
-              />
-              <Route path="/messages" render={() =>
-                <Chat
-                  currentUser={this.state.currentUser}
-                />
-              }
-              />
-              <Route path="/notifications" render={() => 
-                <Notifications
-                  currentUser={this.state.currentUser}
-                  isLogin={this.state.isLogin}
-                />
-              }
-              />
-              <Route path="/likes" render={() => 
-                <Likes
-                  currentUser={this.state.currentUser}
-                  isLogin={this.state.isLogin}
-                />
-              }
-              /> */}
+              />*/}
             </Switch>
-
           </div>
           {/* <Footer /> */}
         </div>

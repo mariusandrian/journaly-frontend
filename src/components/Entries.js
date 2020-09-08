@@ -3,6 +3,7 @@ import { Redirect, Link } from "react-router-dom";
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import IconButton from '@material-ui/core/IconButton';
+import Header from './Header';
 
 import axios from 'axios';
 const BACKEND_URL = 'http://localhost:4000';
@@ -15,10 +16,11 @@ export class Entries extends Component {
         }
     }
     getEntries = async () => {
-        // console.log(this.props.currentUser._id);
+        const user = JSON.parse(localStorage.getItem('currentUser'));
+        console.log('getting entries using user' , user._id);
         const response = await axios({
             method: 'get',
-            url: `${BACKEND_URL}/entries/${this.props.currentUser.user_id}`,
+            url: `${BACKEND_URL}/entries/${user._id}`,
         })
         .catch(function (error) {
             console.log(error);

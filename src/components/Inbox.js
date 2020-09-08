@@ -15,9 +15,11 @@ export class Inbox extends Component {
         }
     }
     getMail = async () => {
+        const user = JSON.parse(localStorage.getItem('currentUser'));
+        console.log('getting entries using user' , user._id);
         const response = await axios({
             method: 'get',
-            url: `${BACKEND_URL}/mail/${this.props.currentUser.user_id}`,
+            url: `${BACKEND_URL}/mail/${user._id}`,
         })
         .catch(function (error) {
             console.log(error);

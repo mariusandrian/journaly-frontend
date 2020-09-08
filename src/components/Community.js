@@ -29,6 +29,7 @@ export class Community extends Component {
     }
     getCommunityPosts = async () => {
         console.log('daily question is ', this.props.dailyQuestion)
+        await this.props.getDailyQuestion();
         const response = await axios({
             method: 'get',
             url: `${BACKEND_URL}/cty/feed/${this.props.dailyQuestion._id}`,
