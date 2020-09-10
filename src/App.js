@@ -54,9 +54,9 @@ class App extends Component {
 
   // Check User Authentication
   checkAuthentication = async () => {
-    const result = await sessionService.checkAuthentication();
-    console.log('result is of auth check is ', result);
-    if (result.isLogin) {
+    // const result = await sessionService.checkAuthentication();
+    // console.log('result is of auth check is ', result);
+    if (localStorage.getItem('currentUser')) {
       console.log('into if statement')
       const currentUser = localStorage.getItem('currentUser');
       console.log(currentUser)
