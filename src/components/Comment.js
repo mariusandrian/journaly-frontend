@@ -11,7 +11,6 @@ const REACT_APP_SERVER_URL = Endpoints.REACT_APP_SERVER_URL;
 
 const moment = require('moment');
 
-
 export class Comment extends Component {
     constructor(props) {
         super(props)
