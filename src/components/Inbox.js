@@ -3,9 +3,10 @@ import { Redirect, Link } from "react-router-dom";
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import IconButton from '@material-ui/core/IconButton';
-
+import Endpoints from '../config/endpoints';
 import axios from 'axios';
-const BACKEND_URL = 'http://localhost:4000';
+
+const REACT_APP_SERVER_URL = Endpoints.REACT_APP_SERVER_URL;
 
 export class Inbox extends Component {
     constructor(props) {
@@ -19,7 +20,7 @@ export class Inbox extends Component {
         console.log('getting entries using user' , user._id);
         const response = await axios({
             method: 'get',
-            url: `${BACKEND_URL}/mail/${user._id}`,
+            url: `${REACT_APP_SERVER_URL}/mail/${user._id}`,
         })
         .catch(function (error) {
             console.log(error);
@@ -35,7 +36,7 @@ export class Inbox extends Component {
             const entryKey = e.currentTarget.value;
             const response = await axios({
                 method: 'delete',
-                url: `${BACKEND_URL}/entries/${entryKey}`,
+                url: `${REACT_APP_SERVER_URL}/entries/${entryKey}`,
             });
             if(response.status) {
                 this.getEntries();

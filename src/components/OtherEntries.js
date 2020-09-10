@@ -3,9 +3,10 @@ import { Redirect, Link } from "react-router-dom";
 import EditIcon from '@material-ui/icons/Edit';
 import IconButton from '@material-ui/core/IconButton';
 import ChatIcon from '@material-ui/icons/Chat';
-
+import Endpoints from '../config/endpoints';
 import axios from 'axios';
-const BACKEND_URL = 'http://localhost:4000';
+
+const REACT_APP_SERVER_URL = Endpoints.REACT_APP_SERVER_URL;
 
 export class OtherEntries extends Component {
     constructor(props) {
@@ -18,7 +19,7 @@ export class OtherEntries extends Component {
         // console.log(this.props.currentUser._id);
         const response = await axios({
             method: 'get',
-            url: `${BACKEND_URL}/top/${this.props.currentUser.user_id}`,
+            url: `${REACT_APP_SERVER_URL}/top/${this.props.currentUser.user_id}`,
         })
         .catch(function (error) {
             console.log(error);
@@ -34,7 +35,7 @@ export class OtherEntries extends Component {
             const entryKey = e.currentTarget.value;
             const response = await axios({
                 method: 'delete',
-                url: `${BACKEND_URL}/entries/${entryKey}`,
+                url: `${REACT_APP_SERVER_URL}/entries/${entryKey}`,
             });
             if(response.status) {
                 this.getEntries();

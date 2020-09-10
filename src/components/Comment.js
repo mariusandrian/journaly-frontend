@@ -5,9 +5,12 @@ import Button from '@material-ui/core/Button';
 import TextareaAutosize from '@material-ui/core/TextareaAutosize';
 import Icon from '@material-ui/core/Icon';
 import axios from 'axios';
+import Endpoints from '../config/endpoints';
+
+const REACT_APP_SERVER_URL = Endpoints.REACT_APP_SERVER_URL;
+
 const moment = require('moment');
 
-const BACKEND_URL = 'http://localhost:4000';
 
 export class Comment extends Component {
     constructor(props) {
@@ -22,7 +25,7 @@ export class Comment extends Component {
     getEntry = async () => {
         const response = await axios({
             method: 'get',
-            url: `${BACKEND_URL}/entries/edit/${this.props.match.params.id}`,
+            url: `${REACT_APP_SERVER_URL}/entries/edit/${this.props.match.params.id}`,
         })
         .catch(function (error) {
             console.log(error);
@@ -43,7 +46,7 @@ export class Comment extends Component {
         try {
             const response = await axios({
                 method: 'put',
-                url: `${BACKEND_URL}/mail/${this.state.user_id}`,
+                url: `${REACT_APP_SERVER_URL}/mail/${this.state.user_id}`,
                 data: {
                     user_id: this.props.currentUser.user_id,
                     username: this.props.currentUser.username,

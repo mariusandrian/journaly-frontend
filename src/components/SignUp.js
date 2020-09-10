@@ -2,6 +2,9 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Form, Col, Row, Button } from 'react-bootstrap';
 import axios from 'axios';
+import Endpoints from '../config/endpoints';
+
+const REACT_APP_SERVER_URL = Endpoints.REACT_APP_SERVER_URL;
 
 export class SignUp extends Component {
     constructor (props) {
@@ -24,7 +27,7 @@ export class SignUp extends Component {
                 email: this.state.signupEmail
             },
             withCredentials: true,
-            url: "http://localhost:4000/register"
+            url: `${REACT_APP_SERVER_URL}/register`
         })
         
         .then( res => {

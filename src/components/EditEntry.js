@@ -3,9 +3,10 @@ import { Redirect, Link } from "react-router-dom";
 import SaveIcon from '@material-ui/icons/Save';
 import Button from '@material-ui/core/Button';
 import TextareaAutosize from '@material-ui/core/TextareaAutosize';
-
+import Endpoints from '../config/endpoints';
 import axios from 'axios';
-const BACKEND_URL = 'http://localhost:4000';
+
+const REACT_APP_SERVER_URL = Endpoints.REACT_APP_SERVER_URL;
 
 export class EditEntry extends Component {
     constructor(props) {
@@ -19,7 +20,7 @@ export class EditEntry extends Component {
     getEntry = async () => {
         const response = await axios({
             method: 'get',
-            url: `${BACKEND_URL}/entries/edit/${this.props.match.params.id}`,
+            url: `${REACT_APP_SERVER_URL}/entries/edit/${this.props.match.params.id}`,
         })
         .catch(function (error) {
             console.log(error);
@@ -57,7 +58,7 @@ export class EditEntry extends Component {
             }
             const response = await axios({
                 method: 'put',
-                url: `${BACKEND_URL}/entries/${this.state._id}`,
+                url: `${REACT_APP_SERVER_URL}/entries/${this.state._id}`,
                 data: {
                     content: this.state.content,
                     mood: this.state.mood,

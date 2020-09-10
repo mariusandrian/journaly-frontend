@@ -3,10 +3,12 @@ import Alert from '@material-ui/lab/Alert';
 import Button from '@material-ui/core/Button';
 import {withRouter} from 'react-router-dom';
 import TextareaAutosize from '@material-ui/core/TextareaAutosize';
+import Endpoints from '../config/endpoints';
+
+const REACT_APP_SERVER_URL = Endpoints.REACT_APP_SERVER_URL;
+
 const moment = require('moment');
 const axios = require('axios');
-const BACKEND_URL = 'http://localhost:4000';
-
 
 export class NewEntry extends Component {
     constructor(props) {

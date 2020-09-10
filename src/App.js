@@ -21,13 +21,9 @@ import SignUp from './components/SignUp';
 import moment from 'moment';
 import axios from 'axios';
 import ProtectedRoute from './components/ProtectedRoute';
+import Endpoints from './config/endpoints';
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:4000';
-
-// const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:4000'
-// const buildUrl = apiPath => {
-//     return BACKEND_URL + apiPath;
-// };
+const REACT_APP_SERVER_URL = Endpoints.REACT_APP_SERVER_URL;
 
 class App extends Component {
   constructor(props) {
@@ -91,7 +87,7 @@ class App extends Component {
             password: this.state.loginPassword
         },
         withCredentials: true,
-        url: "http://localhost:4000/login"
+        url: `${REACT_APP_SERVER_URL}/login`
     })
     
     .then( res => {
@@ -136,7 +132,7 @@ handleChange = (event) => {
     axios({
       method: "GET",
       withCredentials: true,
-      url: "http://localhost:4000/logout"
+      url: `${REACT_APP_SERVER_URL}/logout`
     })
     // Reset Local Storage
     localStorage.clear();
@@ -171,7 +167,7 @@ getDailyQuestion = async () => {
   console.log('getting daily question from App');
   const response = await axios({
       method: 'get',
-      url: `${BACKEND_URL}/cty/question`,
+      url: `${REACT_APP_SERVER_URL}/cty/question`,
   })
   .catch(function (error) {
       console.log(error);
@@ -210,7 +206,7 @@ submitNewEntry = async(e) => {
           console.log(this.props);
           response = await axios({
               method: 'post',
-              url: `${BACKEND_URL}/entries`,
+              url: `${REACT_APP_SERVER_URL}/entries`,
               data: {
                   user_id: this.state.currentUser.user_id,
                   username: this.state.currentUser.username,

@@ -6,10 +6,11 @@ import Alert from '@material-ui/lab/Alert';
 import Button from '@material-ui/core/Button';
 import TextareaAutosize from '@material-ui/core/TextareaAutosize';
 import Login from '../components/Login';
-import Header from '../components/Header'
+import Endpoints from '../config/endpoints';
+
+const REACT_APP_SERVER_URL = Endpoints.REACT_APP_SERVER_URL;
 const moment = require('moment');
 const axios = require('axios');
-const BACKEND_URL = 'http://localhost:4000';
 
 class Home extends Component {
     constructor (props) {
@@ -24,7 +25,7 @@ class Home extends Component {
         try {
             const response = await axios({
                 method: 'post',
-                url: `${BACKEND_URL}/cty/post`,
+                url: `${REACT_APP_SERVER_URL}/cty/post`,
                 data: {
                     user_id: this.props.currentUser.user_id,
                     username: this.props.currentUser.username,
