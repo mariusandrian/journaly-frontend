@@ -65,10 +65,9 @@ h1 {
 }
 
 .main-navigation-links > a:hover {
-  font-weight: bold;
-  border: 1px solid white;
+  border-bottom: 1px solid black;
 }
-
+      
 /* User Navigation Bar */
 .user-navigation {
   display: flex;
@@ -104,9 +103,7 @@ h1 {
 
 .homepage-title > h2 {
   font-size: 50px;
-  /* border-bottom: 1px solid lightslategray; */
   padding: 2% 0;
-  font-family: 'Roboto Slab', serif;
 }
 
 .avatar {
@@ -126,9 +123,7 @@ h1 {
 
 .home-community-qn > h2 {
   font-size: 30px;
-  /* border-top: 1px solid lightslategray; */
   padding: 2% 0;
-  font-family: 'Roboto Slab', serif;
 }
 
 
@@ -146,31 +141,23 @@ h1 {
   font-family: 'Roboto Slab', serif;
 }
 /* Sign-up and Login Forms */
-.signup-form {
-  width: 40%;
-  margin: 3% auto;
-  padding: 2%;
-  border-radius: 20px;
-  background: rgb(0, 0, 0); /* Fallback color */
-  background: rgba(0, 0, 0, 0.5); 
-  color: white;
-  font-size: 15px;
+.signup-container {
+  margin: auto;
 }
 
 .login {
-  width: 35%;
-  margin: 3% auto;
-  padding: 1%;
+  width: 250px;
+  padding: 5%;
   border-radius: 20px;
-  background: rgb(0, 0, 0); /* Fallback color */
-  background: rgba(0, 0, 0, 0.5); 
+  -webkit-box-shadow: 2px 10px 22px -9px rgba(163,163,163,1);
+  -moz-box-shadow: 2px 10px 22px -9px rgba(163,163,163,1);
+  box-shadow: 2px 10px 22px -9px rgba(163,163,163,1);
+  background: rgb(255, 255, 255); 
   text-align: center;
-  color: white;
+  color: rgb(36, 35, 35);
 }
 
-.landing-logo {
-  float: left
-}
+
 .validate:focus {
   color: white;
 }
@@ -562,4 +549,132 @@ main footer a{
 .input-textarea {
   width: 400px;
   padding: 10px;
+}
+
+/* Landing Page */
+.landing-header {
+  min-height: 40px;
+  padding: 20px;
+  display: flex;
+}
+.landing-logo {
+  width: 50%;
+  vertical-align: top;
+}
+
+.landing-logo > h1 {
+  margin: 0;
+}
+.landing-nav {
+  text-align: right;
+  width: 50%;
+}
+.login-button {
+  -webkit-appearance:  none; 
+  width:  auto;
+  min-width:  100px;
+  border-radius:  24px; 
+  text-align:  center; 
+  padding:  15px 40px;
+  margin-top:  20px; 
+  background-color:  rgb(182,157,230); 
+  color:  #fff; 
+  font-size:  14px;
+  margin-left:  auto; 
+  font-weight:  500; 
+  box-shadow:  0px 2px 6px -1px rgba(0,0,0,.13); 
+  border:  none;
+  transition:  all .3s ease; 
+  outline: 0; 
+  font-weight: bold;
+  cursor: pointer;
+}
+.signup-button {
+  -webkit-appearance:  none; 
+  width:  auto;
+  min-width:  100px;
+  border-radius:  24px; 
+  text-align:  center; 
+  padding:  15px 40px;
+  margin-top:  20px; 
+  background-color:  rgb(216, 154, 112); 
+  color:  #fff; 
+  font-size:  14px;
+  margin-left:  auto; 
+  font-weight:  500; 
+  box-shadow:  0px 2px 6px -1px rgba(0,0,0,.13); 
+  border:  none;
+  transition:  all .3s ease; 
+  outline: 0; 
+  font-weight: bold;
+  cursor: pointer;
+}
+.main-landing-container {
+  display: flex;
+  width: 100%;
+  margin: 10% 0;
+}
+.landing-text {
+  width: 50%;
+  box-sizing: border-box;
+  padding-left: 20%;
+  padding-right: 50px;
+  text-align: right;
+  word-wrap: normal;
+}
+.landing-text > h1 {
+  font-weight: normal;
+
+}
+.login-container {
+  width: 50%;
+}
+.landing-header-button {
+  -webkit-appearance:  none; 
+  width:  auto;
+  min-width:  100px;
+  border-radius:  24px; 
+  text-align:  center; 
+  padding:  15px 40px;
+  background-color:  rgb(216, 154, 112); 
+  color:  #fff; 
+  font-size:  14px;
+  margin-left:  auto; 
+  font-weight:  500; 
+  box-shadow:  0px 2px 6px -1px rgba(0,0,0,.13); 
+  border:  none;
+  transition:  all .3s ease; 
+  outline: 0; 
+  font-weight: bold;
+  cursor: pointer;
+}
+
+#login-btn {
+  background-color:  rgb(182,157,230); 
+}
+
+#loginUsername, #loginPassword  {
+    background-color: #eee;
+    border: none;
+    padding: 12px 15px;
+    margin: 8px 0;
+    width: 200px;
+}
+#signupUsername, #signupPassword, #signupEmail  {
+  background-color: #eee;
+  border: none;
+  padding: 12px 15px;
+  margin: 8px 0;
+  width: 200px;
+}
+
+#group1 > input {
+  margin-right: 20px;
+}
+
+.comment-item {
+  background-color: rgba(255,255,255,0.25);
+  border-radius: 10px;
+  margin-top: 10px;
+  padding: 8px;
 }

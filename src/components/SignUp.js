@@ -47,49 +47,43 @@ export class SignUp extends Component {
         return (
             <React.Fragment>
                 <div>
-                    <div>
-                        <div className="landing-logo">Journaly</div>
-                        <div className="landing-nav">
-                            <ul className="main-navigation-links">
-                                <Link to="/">
-                                    <li>Log In</li>
-                                </Link>
-                            </ul>
+                    <div className="landing-header">
+                        <div className="landing-logo">
+                            <h1>Journaly.</h1>
                         </div>
-
+                        <div className="landing-nav">
+                                <Link to="/">
+                                    <Button className="landing-header-button" id="login-btn">Log In</Button>
+                                </Link>
+                        </div>
+                    </div>
+                    <div className="main-landing-container">
+                    <div className="signup-container">
                         <Form className="login" onSubmit={this.signup}>
-                        <h2 className="text-center h2">SIGN UP</h2>
+                        <h2 className="text-center h2">Sign Up to start writing</h2>
                         <Form.Group as={Row}>
-                            <Form.Label column sm="4">
-                                Email
-                            </Form.Label>
                             <Col sm="8">
-                                <Form.Control type="email" id="signupEmail" placeholder="email" value={this.state.signupEmail} onChange={this.handleChange} required />
+                                <Form.Control type="email" id="signupEmail" placeholder="Email" value={this.state.signupEmail} onChange={this.handleChange} required />
                             </Col>
                         </Form.Group>
                         <Form.Group as={Row}>
-                            <Form.Label column sm="4">
-                                Username
-                            </Form.Label>
                             <Col sm="8">
-                                <Form.Control type="text" id="signupUsername" placeholder="username" value={this.state.signupUsername} onChange={this.handleChange} required />
+                                <Form.Control type="text" id="signupUsername" placeholder="Username" value={this.state.signupUsername} onChange={this.handleChange} required />
                             </Col>
                         </Form.Group>
 
                         <Form.Group as={Row}>
-                            <Form.Label column sm="4">
-                                Password
-                            </Form.Label>
                             <Col sm="8">
-                                <Form.Control type="password" id="signupPassword" placeholder="password" value={this.state.signupPassword} onChange={this.handleChange} required />
+                                <Form.Control type="password" id="signupPassword" placeholder="Password" value={this.state.signupPassword} onChange={this.handleChange} required />
                             </Col>
                         </Form.Group>
 
                         <Form.Group className="text-center">
-                            <Button type="submit" variant="primary">Sign Up</Button>
+                        <button className="signup-button" type="submit" variant="primary">Sign Up</button>
                         </Form.Group>
                     <p>{this.props.err}</p>
                     </Form> 
+                    </div>
                     </div>
                 </div>
             </React.Fragment>

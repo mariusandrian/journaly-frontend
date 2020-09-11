@@ -34,6 +34,7 @@ export class Comment extends Component {
             this.setState({
                 content: response.data.data.content,
                 user_id: response.data.data.user_id,
+                username: response.data.data.username,
                 date: response.data.data.date,
                 mood: response.data.data.mood,
                 moodIndicator:  response.data.data.moodIndicator,
@@ -76,7 +77,7 @@ export class Comment extends Component {
         return (
             <React.Fragment>
                 <div className="likes-container">
-                    <div className="likes-item">
+                    <div className="comment-item">
                         <div className="likes-name">
                             <h3>{this.state.username} wrote on {this.state.date}</h3>
                             <p>{this.state.content}</p>
@@ -84,6 +85,7 @@ export class Comment extends Component {
                         <div>
                             <h2>Your Reply</h2>
                             <TextareaAutosize name="comment" value={this.state.comment} aria-label="empty textarea" placeholder="Empty" id="content" onChange={this.handleChange} />
+                            <br />
                             <Button
                                 variant="contained"
                                 color="primary"

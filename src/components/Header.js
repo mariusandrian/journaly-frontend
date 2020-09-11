@@ -30,11 +30,12 @@ export class Header extends Component {
                         : <React.Fragment>
                             <Link to="/profile">
                                 <li>
-                                    <img className="avatar" src={this.props.avatar} alt="profile-img"></img>{this.props.username}
+                                    <img className="avatar" src={this.props.avatar} alt="profile-img"></img>
+                                    {this.props.username}
                                 </li>
                             </Link>
                             <Link to="/">
-                                <li onClick={this.props.logout}>SIGN OUT</li>
+                                <li onClick={this.props.logout}>Sign Out</li>
                             </Link>
                         </React.Fragment>
 
