@@ -1,3 +1,12 @@
+# Journaly
+
+This is the frontend part of Journaly.
+
+To see the app, please visit the backend first: [here](https://journaly-backend.herokuapp.com/)
+Then you can visit the frontend: [here](https://journaly-frontend.herokuapp.com/)
+
+Backend part can be found in [this link](https://github.com/mariusandrian/journaly-frontend)
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
