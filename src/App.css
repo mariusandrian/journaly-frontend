@@ -106,10 +106,20 @@ h1 {
   padding: 2% 0;
 }
 
+
+.avatar-container {
+  display: flex;
+  justify-content: center; 
+}
+
 .avatar {
   width: 30px;
   height: 30px;
   border-radius: 50%;
+}
+
+.avatar-name {
+  padding-left: 10px;
 }
 
 /* Home Page Title */

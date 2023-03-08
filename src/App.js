@@ -32,7 +32,7 @@ class App extends Component {
       currentUser: {
         username: "",
         user_id: "",
-        avatar: "https://www.kayawell.com/Data/UserContentImg/2018/3/b1b977c9-671f-47af-8956-d4037e5a82fd.jpg",
+        avatar: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
         hasWrittenToday: false
       },
       loginUsername: "",
@@ -157,7 +157,7 @@ handleChange = (event) => {
       currentUser: {
         username: "",
         user_id: "",
-        avatar: "https://www.kayawell.com/Data/UserContentImg/2018/3/b1b977c9-671f-47af-8956-d4037e5a82fd.jpg",
+        avatar: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
         hasWrittenToday: false
       },
     })
